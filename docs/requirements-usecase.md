@@ -51,17 +51,17 @@
 * Flow of events
     * Basic flow
         * User navigates to the registration page.
-        * User registers.
+        * Anonymous User:
+            1. Check the ranking board *(go to alternative flow #4)* (The score board is always there)
+        * * User registers/login (what is the visible ID, think about the vandalism).
         * User agrees to the Terms of Use.
         * User lands on the homepage/dashboard
-        * Authenticated User can:
+        * Authenticated User (can happens out of order):
             1. Download the dataset
-            2. See user's past submissions
+            2. See his/her past submissions
             3. Evaluate new submission and submit
             4. Check the ranking board
             5. Change contact information
-        * Anonymous User can:
-            1. Check the ranking board *(go to alternative flow #4)*
         * User logs out
     * Alternative flow
         1. Download the dataset
@@ -75,16 +75,16 @@
             *  User clicks on "evaluate"
             *  User sees their result (score/rank)
             *  User sees the visualization of the result
-            *  User can submit (CAPCHA)
+            *  User submits (CAPCHA)
             *  User is taken to confirmation page
             *  User clicks on the return button to return to home
 
         4. Check the ranking board
             * User clicks on ranking link
             * User sees a list of ranking
-            * User can filter by range of dates 
+            * User tries to filter by range of dates 
             * User clicks on a specific submission
-            * User can see the visualization of the clicked submission
+            * User see the visualization of the clicked submission
         5. Change contact information
             * User navigates to the settings page
             * User clicks on edit

@@ -1,26 +1,17 @@
 {
   "name": "2017-bps-routes",
-  "version": "1.0.0",
-  "description": "*Credits*: Will Eger (Strategic Project Manager, Boston Public Schools)",
-  "main": "index.js",
-  "directories": {
-    "doc": "docs"
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
   },
   "dependencies": {
-    "pug": "^2.0.0-rc.4"
-  },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/bu-else/2017-bps-routes.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/bu-else/2017-bps-routes/issues"
-  },
-  "homepage": "https://github.com/bu-else/2017-bps-routes#readme"
+    "body-parser": "~1.17.1",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.3",
+    "express": "~4.15.2",
+    "morgan": "~1.8.1",
+    "pug": "~2.0.0-beta11",
+    "serve-favicon": "~2.4.2"
+  }
 }

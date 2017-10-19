@@ -3,3 +3,7 @@ body {
   margin: 0;
   font-family: "Rubik", "Lucida Grande", Helvetica, Arial, sans-serif;
 }
+
+.hide {
+  display: none;
+}

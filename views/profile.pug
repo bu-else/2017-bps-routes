@@ -1,0 +1,36 @@
+extends layout
+
+block content
+    .container.mt-5
+        .row
+            .col-md-3#profile
+                .profile-picture-container(style="height: 200px; width: 200px; background-color: aqua; border-radius: 4px;")
+            .col-md-9#submission-container
+                h4 #{ username }'s Past Submissions
+                table.table.table-hover.mt-4
+                    thead
+                        tr
+                            th Ranking
+                            th Score
+                            th Date Submitted
+                    tbody
+                        tr
+                            th(scope='row') 1
+                            td 118
+                            td 10/17/2017
+                        tr
+                            th(scope='row') 2
+                            td 95
+                            td 10/04/2017
+                        tr
+                            th(scope='row') 3
+                            td 94
+                            td 9/23/2017
+                        tr
+                            th(scope='row') 4
+                            td 94
+                            td 9/20/2017
+                        tr
+                            th(scope='row') 5
+                            td 92
+                            td 10/04/2017

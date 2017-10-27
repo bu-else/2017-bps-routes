@@ -2,8 +2,10 @@
   "name": "2017-bps-routes",
   "version": "0.0.0",
   "private": true,
-  "scripts": {
-    "start": "node ./bin/www"
+  "description": "Interface for evaluating and submit solution to the BPS Bus Routing challenge",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
   },
   "dependencies": {
     "body-parser": "~1.17.1",
@@ -13,5 +15,20 @@
     "morgan": "~1.8.1",
     "pug": "~2.0.0-beta11",
     "serve-favicon": "~2.4.2"
-  }
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node ./bin/www",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bu-else/2017-bps-routes.git"
+  },
+  "author": "shonihei, jmcaloon, zuik",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bu-else/2017-bps-routes/issues"
+  },
+  "homepage": "https://github.com/bu-else/2017-bps-routes#readme"
 }

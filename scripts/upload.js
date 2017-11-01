@@ -1,8 +1,9 @@
-/*jshint browser:true */
-/* eslint-env browser */
-/* eslint no-use-before-define:0 */
-/*global Uint8Array, Uint16Array, ArrayBuffer */
-/*global XLSX */
+
+var poo = function poo() {
+	console.log("hi");
+    return 2;
+};
+
 var X = XLSX;
 
 var global_wb;
@@ -24,40 +25,40 @@ var process_wb = (function() {
 			var roa = X.utils.sheet_to_json(workbook.Sheets[sheetName]);
 			if(roa.length) result[sheetName] = roa;
 		});
-		//console.log(JSON.stringify(result,2,2));
+
 
 		var groupedByBus=groupBy(result.Routes, 'Bus ID');
+		//console.log(groupedByBus);
 
-		for (var id in groupedByBus){
+		for (var key in groupedByBus){
 			longitudes = [];
 			latitudes = [];
-			console.log(groupedByBus.id)
-			for (var pair in groupedByBus.id){
-				//console.log(pair)
-				latitudes.push(groupedByBus[id[pair["Waypoint Latitude"]]]);
-				groupedByBus[id["longitudes"]] = longitudes;
-				groupedByBus[id["longitudes"]] = longitudes;
-				delete groupedByBus[id[pair["Waypoint Longitude"]]];
-				delete groupedByBus[id[pair["Waypoint Latitude"]]];
-				//console.log(longitudes);
+			for (var i = 0; i < (groupedByBus[key]).length; i++){
+				if (i % 2 == 0){
+					longitudes.push(groupedByBus[key][i]);
+				}
+				else{
+					latitudes.push(groupedByBus[key][i]);
+				}
 			}
+			groupedByBus[key] = {"longitudes": longitudes, "latitudes": latitudes};
 
 		}
 
-
 		console.log(JSON.stringify(groupedByBus,2,2));
-		return (JSON.stringify((result.Routes).slice(0,5), 2, 2));
-		//return (JSON.stringify(groupedByBus,2,2));
+		return (JSON.stringify(groupedByBus,2,2));
 	};
+
 
 	var groupBy = function(xs, key) {
-  	return xs.reduce(function(rv, x) {
-			var keyLst = (rv[x[key]] = rv[x[key]] || []); //see if key exists
-			delete x['Bus ID']; //remove redundant id
-	    keyLst.push(x);
-	    return rv;
-  	}, {});
-	};
+	  	return xs.reduce(function(rv, x) {
+		    var lst = (rv[x[key]] = rv[x[key]] || [])
+				lst.push(x["Waypoint Longitude"]);
+				lst.push(x["Waypoint Latitude"]);
+		    return rv;
+	  	}, {});
+		};
+
 
 
 	var to_csv = function to_csv(workbook) {
@@ -147,8 +148,6 @@ var do_file = (function() {
 	function handleFile(e) { do_file(e.target.files); }
 	xlf.addEventListener('change', handleFile, false);
 })();
-</script>
-<script type="text/javascript">
 	var _gaq = _gaq || [];
 	_gaq.push(['_setAccount', 'UA-36810333-1']);
 	_gaq.push(['_trackPageview']);
@@ -158,4 +157,3 @@ var do_file = (function() {
 		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
 		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 	})();
-</script>

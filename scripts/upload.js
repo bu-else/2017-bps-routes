@@ -1,49 +1,3 @@
-
-<!DOCTYPE html>
-<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
-<!-- vim: set ts=2: -->
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Upload a Solution</title>
-<style>
-#drop{
-	border:2px dashed #bbb;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
-	border-radius:5px;
-	padding:25px;
-	text-align:center;
-	font:20pt bold,"Vollkorn";color:#bbb
-}
-#b64data{
-	width:100%;
-}
-a { text-decoration: none }
-</style>
-</head>
-<body>
-<pre>
-<h1> Upload a Solution </h1>
-
-Output Format: <select name="format" onchange="setfmt()">
-<option value="json" selected> JSON</option>
-<option value="csv"> CSV</option>
-<option value="form"> FORMULAE</option>
-<option value="html"> HTML</option>
-</select><br />
-<div id="drop">Drop a spreadsheet file here to see sheet data</div>
-<input type="file" name="xlfile" id="xlf" /> ... or click here to select a file
-
-
-Use readAsBinaryString: (when available) <input type="checkbox" name="userabs" checked>
-</pre>
-<pre id="out"></pre>
-<div id="htmlout"></div>
-<br />
-<script src="http://oss.sheetjs.com/js-xlsx/shim.js"></script>
-<script src="http://oss.sheetjs.com/js-xlsx/xlsx.full.min.js"></script>
-<script>
 /*jshint browser:true */
 /* eslint-env browser */
 /* eslint no-use-before-define:0 */
@@ -70,75 +24,40 @@ var process_wb = (function() {
 			var roa = X.utils.sheet_to_json(workbook.Sheets[sheetName]);
 			if(roa.length) result[sheetName] = roa;
 		});
-
+		//console.log(JSON.stringify(result,2,2));
 
 		var groupedByBus=groupBy(result.Routes, 'Bus ID');
-		//console.log(groupedByBus);
 
-		for (var key in groupedByBus){
+		for (var id in groupedByBus){
 			longitudes = [];
 			latitudes = [];
-			for (var i = 0; i < (groupedByBus[key]).length; i++){
-				if (i % 2 == 0){
-					longitudes.push(groupedByBus[key][i]);
-				}
-				else{
-					latitudes.push(groupedByBus[key][i]);
-				}
+			console.log(groupedByBus.id)
+			for (var pair in groupedByBus.id){
+				//console.log(pair)
+				latitudes.push(groupedByBus[id[pair["Waypoint Latitude"]]]);
+				groupedByBus[id["longitudes"]] = longitudes;
+				groupedByBus[id["longitudes"]] = longitudes;
+				delete groupedByBus[id[pair["Waypoint Longitude"]]];
+				delete groupedByBus[id[pair["Waypoint Latitude"]]];
+				//console.log(longitudes);
 			}
-			groupedByBus[key] = {"longitudes": longitudes, "latitudes": latitudes};
 
 		}
 
-		// for (var key in groupedByBus){
-		// 	longitudes = [];
-		// 	latitudes = [];
-		// 	var i = 0;
-		// 	for (var value in groupedByBus[key]){
-		// 		//console.log(value);
-		// 		if (i % 2 == 0){
-		// 			longitudes.push(value);
-		// 		}
-		// 		else{
-		// 			latitudes.push(value);
-		//
-		// 		}
-		// 		i += 1
-		// 	}
-		// 	groupedByBus[key] = {"longitudes": longitudes, "latitudes": latitudes};
-		//
-		//
-		// }
-
-
 
 		console.log(JSON.stringify(groupedByBus,2,2));
-		return (JSON.stringify(groupedByBus,2,2));
+		return (JSON.stringify((result.Routes).slice(0,5), 2, 2));
+		//return (JSON.stringify(groupedByBus,2,2));
 	};
 
-
 	var groupBy = function(xs, key) {
-	  	return xs.reduce(function(rv, x) {
-		    var lst = (rv[x[key]] = rv[x[key]] || [])
-				lst.push(x["Waypoint Longitude"]);
-				lst.push(x["Waypoint Latitude"]);
-		    return rv;
-	  	}, {});
-		};
-
-
-	// var groupBy = function(xs, key) {
-	//
-  // 	return xs.reduce(function(rv, x) {
-	// 		//console.log(x);
-	// 		var lst = (rv[x[key]] = rv[x[key]] || []); //longitude and latiude pairs that belong to the same bus
-	// 		delete x['Bus ID'] //remove redundant id
-	// 		lst.push(x["Waypoint Longitude"]);
-	// 		lst.push(x["Waypoint Latitude"]);
-	//
-	//     return rv;
-  // 	}, {});
-	// };
+  	return xs.reduce(function(rv, x) {
+			var keyLst = (rv[x[key]] = rv[x[key]] || []); //see if key exists
+			delete x['Bus ID']; //remove redundant id
+	    keyLst.push(x);
+	    return rv;
+  	}, {});
+	};
 
 
 	var to_csv = function to_csv(workbook) {
@@ -240,5 +159,3 @@ var do_file = (function() {
 		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 	})();
 </script>
-</body>
-</html>

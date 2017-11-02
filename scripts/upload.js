@@ -1,8 +1,8 @@
-
-var poo = function poo() {
-	console.log("hi");
-    return 2;
-};
+/*jshint browser:true */
+/* eslint-env browser */
+/* eslint no-use-before-define:0 */
+/*global Uint8Array, Uint16Array, ArrayBuffer */
+/*global XLSX */
 
 var X = XLSX;
 

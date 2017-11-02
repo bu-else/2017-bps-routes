@@ -3,10 +3,18 @@ html
   head
     title= title
     link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css", integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M", crossorigin="anonymous")
+    link(href="https://fonts.googleapis.com/css?family=Rubik" rel="stylesheet")
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    
     script(src="https://code.jquery.com/jquery-3.2.1.slim.min.js", integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN", crossorigin="anonymous")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js", integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4", crossorigin="anonymous")
     script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js", integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1", crossorigin="anonymous")
+    script(src="https://unpkg.com/babel-standalone@6/babel.min.js")
+    script(src="https://www.gstatic.com/firebasejs/4.5.0/firebase.js")
+    script(src="https://cdn.jsdelivr.net/npm/vue")
+    script(src="/scripts/signin.js", type="text/babel")
     
+
     link(href="https://fonts.googleapis.com/css?family=Rubik" rel="stylesheet")
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
@@ -18,8 +26,16 @@ html
         #collapsingNavbar3.navbar-collapse.collapse
           ul.navbar-nav.mx-auto.w-100.justify-content-center
             li.nav-item.active
-              a.btn.btn-outline-primary(href="#") Submit a New Solution
+              a.btn.btn-outline-primary(href="submit") Submit a New Solution
           ul.nav.navbar-nav.ml-auto.w-100.justify-content-end
             li.nav-item
-              a.nav-link(href="#") Sign In
+              a.nav-link(href="#", data-toggle="modal", data-target="#signinModal", id="login-btn", :class="{'hide': loggedIn}") Sign In
+    div.modal.fade#signinModal
+      div.modal-dialog
+        div.modal-content
+          div.modal-header
+            h5.modal-title Signin
+          div.modal-body.text-center
+            button.btn.btn-primary(onclick="login();") Sign in with Github
+
     block content

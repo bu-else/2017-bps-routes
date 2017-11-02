@@ -1,3 +1,6 @@
+<<<<<<< HEAD
+node_modules
+=======
 # Logs
 logs
 *.log
@@ -56,3 +59,6 @@ typings/
 
 # dotenv environment variables file
 .env
+
+.idea
+>>>>>>> cd5b945ad198897c7f80d2763f71d87f943e4597

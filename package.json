@@ -3,12 +3,14 @@
   "version": "0.0.0",
   "private": true,
   "description": "Interface for evaluating and submit solution to the BPS Bus Routing challenge",
-  "main": "index.js",
+  "main": "_index.js",
   "directories": {
     "doc": "docs"
   },
+
   "dependencies": {
     "body-parser": "~1.17.1",
+    "chai": "^4.1.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.3",
     "express": "~4.15.2",
@@ -16,10 +18,13 @@
     "pug": "~2.0.0-beta11",
     "serve-favicon": "~2.4.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "karma": "^1.7.1",
+    "mocha": "^4.0.1"
+  },
   "scripts": {
     "start": "node ./bin/www",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",

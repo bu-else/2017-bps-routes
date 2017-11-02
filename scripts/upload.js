@@ -1,61 +1,12 @@
-
-<!DOCTYPE html>
-<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
-<!-- vim: set ts=2: -->
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Upload a Solution</title>
-<style>
-#drop{
-	border:2px dashed #bbb;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
-	border-radius:5px;
-	padding:25px;
-	text-align:center;
-	font:20pt bold,"Vollkorn";color:#bbb
-}
-#b64data{
-	width:100%;
-}
-a { text-decoration: none }
-</style>
-</head>
-<body>
-<pre>
-<h1> Upload a Solution </h1>
-
-Output Format: <select name="format" onchange="setfmt()">
-<option value="json" selected> JSON</option>
-<option value="csv"> CSV</option>
-<option value="form"> FORMULAE</option>
-<option value="html"> HTML</option>
-</select><br />
-<div id="drop">Drop a spreadsheet file here to see sheet data</div>
-<input type="file" name="xlfile" id="xlf" /> ... or click here to select a file
-
-
-Use readAsBinaryString: (when available) <input type="checkbox" name="userabs" checked>
-</pre>
-<pre id="out"></pre>
-<div id="htmlout"></div>
-<br />
-<script src="http://oss.sheetjs.com/js-xlsx/shim.js"></script>
-<script src="http://oss.sheetjs.com/js-xlsx/xlsx.full.min.js"></script>
-<script>
 /*jshint browser:true */
 /* eslint-env browser */
 /* eslint no-use-before-define:0 */
 /*global Uint8Array, Uint16Array, ArrayBuffer */
 /*global XLSX */
+
 var X = XLSX;
 
 var global_wb;
-
-function alertNumber( n ) {
-    alert( n );
-};
 
 var process_wb = (function() {
 	var OUT = document.getElementById('out');
@@ -197,8 +148,6 @@ var do_file = (function() {
 	function handleFile(e) { do_file(e.target.files); }
 	xlf.addEventListener('change', handleFile, false);
 })();
-</script>
-<script type="text/javascript">
 	var _gaq = _gaq || [];
 	_gaq.push(['_setAccount', 'UA-36810333-1']);
 	_gaq.push(['_trackPageview']);
@@ -208,6 +157,3 @@ var do_file = (function() {
 		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
 		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 	})();
-</script>
-</body>
-</html>

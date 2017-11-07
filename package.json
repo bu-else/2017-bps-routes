@@ -7,7 +7,6 @@
   "directories": {
     "doc": "docs"
   },
-
   "dependencies": {
     "body-parser": "~1.17.1",
     "chai": "^4.1.2",
@@ -16,7 +15,7 @@
     "express": "~4.15.2",
     "morgan": "~1.8.1",
     "pug": "~2.0.0-beta11",
-    "serve-favicon": "~2.4.2"
+    "serve-favicon": "^2.4.5"
   },
   "devDependencies": {
     "karma": "^1.7.1",

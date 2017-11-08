@@ -4,16 +4,31 @@ Task planning
 # Milestones
 - There will be four milestones:
   - Oct. 19, 2017
-      - Setup Oauth (Firebase)
+      - ~~Setup Oauth (Firebase)~~
       - Bootstrap views:
-          - Ranking board (home page)
-          - Profile page
+          - ~~Ranking board (home page)~~
+          - ~~Profile page~~
           - Submission workflow
           - Viewing result
       - Figure out how to parse Excel and display data (list of potential tools)
   - Nov. 2, 2017
+      - Setup MOC
+      - Integrate submission workflow and parsing Excel spreadsheet.
       - Connect front-end and back-end (identify required end-points)
+          - Retriving user's submission
+          - Checking if an user is an administrator
+          - Upload file to MOC/filestore
+          - End-points (in express)
+              - / 
+              - /submit
+                  - Do not allow user with username "submit"
+              - /users/{username}
+              - /users/{username}/submissions/{id}
       - Administrator View
+          - If you are an administrator, you also get to see the contact information of an user when you are looking at their profile page.
+      
+      - Create some dummy user
+      
   - Nov. 16, 2017
       - Complete algorithm for evaluating solution
       - Display solution on map
@@ -38,3 +53,17 @@ Task planning
 - Administrator view (?)
     - Can see submitter's contact information
 
+# Other note
+**Example schema for storing Bus Route**
+```javascript
+busRoutes = {
+    B286: {
+        long : [],
+        lat  : [],
+    },
+    B287: {
+        long : [],
+        lat  : [],
+    }
+}
+```

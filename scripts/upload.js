@@ -19,13 +19,36 @@ var process_wb = (function() {
 		};
 	})();
 
+  /*
+	Converts each sheet in a workbook into a json.
+	Can access sheets by result.Routes, result.Stop-Assignments, Result.Buses
+
+	*/
 	var to_json = function to_json(workbook) {
-		var result = {};
+		var result = [];
 		workbook.SheetNames.forEach(function(sheetName) {
 			var roa = X.utils.sheet_to_json(workbook.Sheets[sheetName]);
 			if(roa.length) result[sheetName] = roa;
+			//HTMLOUT.innerHTML += JSON.stringify(result,2,2)
+
 		});
 
+		/*
+			Group each entry in result.Routes by Bus ID
+			Then make lists of longitude and latitudes
+			for each Bus
+
+			groupBy is modified from https://stackoverflow.com/questions/38575721/grouping-json-by-values
+		*/
+
+		var groupBy = function(xs, key) {
+				return xs.reduce(function(rv, x) {
+					var lst = (rv[x[key]] = rv[x[key]] || [])
+					lst.push(x["Waypoint Longitude"]);
+					lst.push(x["Waypoint Latitude"]);
+					return rv;
+				}, {});
+			};
 
 		var groupedByBus=groupBy(result.Routes, 'Bus ID');
 		//console.log(groupedByBus);
@@ -45,19 +68,9 @@ var process_wb = (function() {
 
 		}
 
-		console.log(JSON.stringify(groupedByBus,2,2));
+		//console.log(JSON.stringify(groupedByBus,2,2));
 		return (JSON.stringify(groupedByBus,2,2));
 	};
-
-
-	var groupBy = function(xs, key) {
-	  	return xs.reduce(function(rv, x) {
-		    var lst = (rv[x[key]] = rv[x[key]] || [])
-				lst.push(x["Waypoint Longitude"]);
-				lst.push(x["Waypoint Latitude"]);
-		    return rv;
-	  	}, {});
-		};
 
 
 
@@ -84,6 +97,10 @@ var process_wb = (function() {
 		return "";
 	};
 
+
+	/*
+	Where to_json is called from
+	*/
 	return function process_wb(wb) {
 		global_wb = wb;
 		var output = "";

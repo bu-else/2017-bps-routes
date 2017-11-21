@@ -67,7 +67,6 @@ var process_wb = (function() {
 			groupedByBus[key] = {"longitudes": longitudes, "latitudes": latitudes};
 
 		}
-		//spinner.stop()
 
 		//console.log(JSON.stringify(groupedByBus,2,2));
 		spinner.stop()

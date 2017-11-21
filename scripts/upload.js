@@ -8,6 +8,16 @@ var X = XLSX;
 
 var global_wb;
 
+class Evaluation {
+    constructor(data){
+        this.data = data;
+    }
+
+    test(){
+        print(this.data);
+    }
+}
+
 var process_wb = (function () {
     var OUT = document.getElementById('out');
     var HTMLOUT = document.getElementById('htmlout');
@@ -41,6 +51,7 @@ var process_wb = (function () {
                     //HTMLOUT.innerHTML += JSON.stringify(result,2,2)
                 }
             );
+        console.log(result["Stop-Assignments"])
 
         /*
 			Group each entry in result.Routes by Bus ID

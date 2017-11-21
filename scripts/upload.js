@@ -70,7 +70,7 @@ var process_wb = (function () {
                 return rv;
             }, {});
         };
-
+		console.log(result.StopAssignments);
         var groupedByBus = groupBy(result.Routes, 'Bus ID');
         // console.log(groupedByBus); for (var key in groupedByBus){ 	longitudes = [];
         // 	latitudes = []; 	for (var i = 0; i < (groupedByBus[key]).length; i++){ 		if

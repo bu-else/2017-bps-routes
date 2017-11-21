@@ -8,16 +8,6 @@ var X = XLSX;
 
 var global_wb;
 
-class Evaluation {
-    constructor(data){
-        this.data = data;
-    }
-
-    test(){
-        print(this.data);
-    }
-}
-
 var process_wb = (function () {
     var OUT = document.getElementById('out');
     var HTMLOUT = document.getElementById('htmlout');

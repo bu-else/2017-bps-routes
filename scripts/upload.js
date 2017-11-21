@@ -5,10 +5,10 @@
 /*global XLSX */
 
 var X = XLSX;
-
-var global_wb;
+var spinner  = new Spinner(opts);
 
 var process_wb = (function() {
+
 	var OUT = document.getElementById('out');
 	var HTMLOUT = document.getElementById('htmlout');
 
@@ -69,6 +69,7 @@ var process_wb = (function() {
 		}
 
 		//console.log(JSON.stringify(groupedByBus,2,2));
+		spinner.stop()
 		return (JSON.stringify(groupedByBus,2,2));
 	};
 
@@ -128,15 +129,20 @@ var do_file = (function() {
 		rABS = domrabs.checked;
 		var f = files[0];
 		var reader = new FileReader();
+		var target = document.getElementById('spin_box')
+		spinner.spin(target);
 		reader.onload = function(e) {
 			var data = e.target.result;
 			if(!rABS) data = new Uint8Array(data);
-			else process_wb(X.read(data, {type: rABS ? 'binary' : 'array'}));
+			else {
+				process_wb(X.read(data, {type: rABS ? 'binary' : 'array'}));
+			}
 		};
 		if(rABS) reader.readAsBinaryString(f);
 		else reader.readAsArrayBuffer(f);
 	};
 })();
+
 
 (function() {
 	var drop = document.getElementById('drop');
@@ -174,3 +180,26 @@ var do_file = (function() {
 		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
 		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 	})();
+
+	//Options for spinner! :)
+	var opts = {
+	  lines: 13, // The number of lines to draw
+	  length: 28, // The length of each line
+	  width: 14, // The line thickness
+	  radius: 42, // The radius of the inner circle
+	  scale: 1, // Scales overall size of the spinner
+	  corners: 1, // Corner roundness (0..1)
+	  color: '#000000', // #rgb or #rrggbb or array of colors
+	  opacity: 0.25, // Opacity of the lines
+	  rotate: 0, // The rotation offset
+	  direction: 1, // 1: clockwise, -1: counterclockwise
+	  speed: 1, // Rounds per second
+	  trail: 60, // Afterglow percentage
+	  fps: 20, // Frames per second when using setTimeout() as a fallback in IE 9
+	  zIndex: 2e9, // The z-index (defaults to 2000000000)
+	  className: 'spinner', // The CSS class to assign to the spinner
+	  top: '50%', // Top position relative to parent
+	  left: '50%', // Left position relative to parent
+	  shadow: false, // Whether to render a shadow
+	  position: 'relative' // Element positioning
+	};

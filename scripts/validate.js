@@ -42,6 +42,21 @@ function everyStopIncluded(SAdata, Rdata) {
     return true;
 }
 
+/**
+ * Bus capacity validation.
+ * 
+ * Check how much student get assigned to a bus and 
+ * yell if the bus carries more than it can.
+ * 
+ * @param {*} studentAssignment 
+ */
+function busCapacity(studentAssignment){
+    
+}
+
+
+
+
 // Feed me routes and stop assignments
 function evaluate(routes, stopAssignments) {
     var buses = {};

@@ -1,12 +1,18 @@
 /**
- * Convert Excel .xlsx file to json files. Each sheet is its own .json file
- * 
+ * Tool to convert a Excel .xlsx spreadsheet to .json
  */
 
+const XLSX = require('xlsx');
 
-var fs = require('fs');
-var XLSX = require('xlsx');
-
-console.log(process.argv[3 ]);
+const ARGV = process.argv.slice(2);
 
 
+if (ARGV.length() > 0) {
+    let inputFile = ARGV[0];
+
+}
+
+
+function parseFile (path) {
+    
+}

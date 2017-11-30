@@ -5,6 +5,7 @@
 /*global XLSX */
 
 var X = XLSX;
+var spinner  = new Spinner(opts);
 
 var global_wb;
 
@@ -15,8 +16,8 @@ var process_wb = (function () {
     var get_format = (function () {
         var radios = document.getElementsByName("format");
         return function () {
-            for (var i = 0; i < radios.length; ++i) 
-                if (radios[i].checked || radios.length === 1) 
+            for (var i = 0; i < radios.length; ++i)
+                if (radios[i].checked || radios.length === 1)
                     return radios[i].value;
                 };
     })();
@@ -24,7 +25,6 @@ var process_wb = (function () {
     /*
 	Converts each sheet in a workbook into a json.
 	Can access sheets by result.Routes, result.Stop-Assignments, Result.Buses
-
 	*/
     var to_json = function to_json(workbook) {
         // This is an object, not a list
@@ -36,7 +36,7 @@ var process_wb = (function () {
                 var roa = X
                     .utils
                     .sheet_to_json(workbook.Sheets[sheetName], {raw: true});
-                if (roa.length) 
+                if (roa.length)
                     result[sheetName] = roa;
                     //HTMLOUT.innerHTML += JSON.stringify(result,2,2)
                 }
@@ -47,7 +47,6 @@ var process_wb = (function () {
 			Group each entry in result.Routes by Bus ID
 			Then make lists of longitude and latitudes
 			for each Bus
-
 			groupBy is modified from https://stackoverflow.com/questions/38575721/grouping-json-by-values
 		*/
 
@@ -68,7 +67,8 @@ var process_wb = (function () {
         // 			latitudes.push(groupedByBus[key][i]); 		} 	} 	groupedByBus[key] =
         // {"longitudes": longitudes, "latitudes": latitudes}; }
         // console.log(JSON.stringify(groupedByBus,2,2));
-        return (JSON.stringify(groupedByBus, 2, 2));
+				spinner.stop()
+        return "Finished grouping Routes sheet by bus";
     };
 
     var to_csv = function to_csv(workbook) {
@@ -109,51 +109,37 @@ var process_wb = (function () {
     return function process_wb(wb) {
         global_wb = wb;
         var output = "";
-        switch (get_format()) {
-            case "form":
-                output = to_fmla(wb);
-                break;
-            case "html":
-                output = to_html(wb);
-                break;
-            case "json":
-                output = to_json(wb);
-                break;
-            default:
-                output = to_csv(wb);
-        }
-        if (OUT.innerText === undefined) 
+        output = to_json(wb);
+        if (OUT.innerText === undefined)
             OUT.textContent = output;
-        else 
+        else
             OUT.innerText = output;
-        if (typeof console !== 'undefined') 
+        if (typeof console !== 'undefined')
             console.log("output", new Date());
         };
 })();
 
 var setfmt = window.setfmt = function setfmt() {
-    if (global_wb) 
+    if (global_wb)
         process_wb(global_wb);
     };
 
 var do_file = (function () {
     var rABS = typeof FileReader !== "undefined" && (FileReader.prototype || {}).readAsBinaryString;
-    var domrabs = document.getElementsByName("userabs")[0];
-    if (!rABS) 
-        domrabs.disabled = !(domrabs.checked = false);
-    
+
     return function do_file(files) {
-        rABS = domrabs.checked;
         // We need to check whether a file is there first before running this function.
         // We should have a submit button rather than keep checking whether there is a
         // file read into the form.
         var f = files[0];
         var reader = new FileReader();
+				var target = document.getElementById('spin_box')
+				spinner.spin(target);
         reader.onload = function (e) {
             var data = e.target.result;
-            if (!rABS) 
+            if (!rABS)
                 data = new Uint8Array(data);
-            else 
+            else
                 process_wb(X.read(data, {
                     type: rABS
                         ? 'binary'
@@ -161,9 +147,9 @@ var do_file = (function () {
                 }));
             }
         ;
-        if (rABS) 
+        if (rABS)
             reader.readAsBinaryString(f);
-        else 
+        else
             reader.readAsArrayBuffer(f);
         }
     ;
@@ -171,9 +157,9 @@ var do_file = (function () {
 
 (function () {
     var drop = document.getElementById('drop');
-    if (!drop.addEventListener) 
+    if (!drop.addEventListener)
         return;
-    
+
     function handleDrop(e) {
         e.stopPropagation();
         e.preventDefault();
@@ -193,10 +179,34 @@ var do_file = (function () {
 
 (function () {
     var xlf = document.getElementById('xlf');
-    if (!xlf.addEventListener) 
+    if (!xlf.addEventListener)
         return;
     function handleFile(e) {
         do_file(e.target.files);
     }
     xlf.addEventListener('change', handleFile, false);
 })();
+
+
+//Options for spinner! :)
+var opts = {
+	lines: 13, // The number of lines to draw
+	length: 28, // The length of each line
+	width: 14, // The line thickness
+	radius: 42, // The radius of the inner circle
+	scale: 1, // Scales overall size of the spinner
+	corners: 1, // Corner roundness (0..1)
+	color: '#000000', // #rgb or #rrggbb or array of colors
+	opacity: 0.25, // Opacity of the lines
+	rotate: 0, // The rotation offset
+	direction: 1, // 1: clockwise, -1: counterclockwise
+	speed: 1, // Rounds per second
+	trail: 60, // Afterglow percentage
+	fps: 20, // Frames per second when using setTimeout() as a fallback in IE 9
+	zIndex: 2e9, // The z-index (defaults to 2000000000)
+	className: 'spinner', // The CSS class to assign to the spinner
+	top: '50%', // Top position relative to parent
+	left: '50%', // Left position relative to parent
+	shadow: false, // Whether to render a shadow
+	position: 'relative' // Element positioning
+};

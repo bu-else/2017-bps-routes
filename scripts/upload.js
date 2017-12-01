@@ -42,6 +42,8 @@ var process_wb = (function () {
                 }
             );
         console.log(result["Stop-Assignments"])
+        console.log(result["Routes"])
+        // console.log(evaluate(result["Routes"], result["Stop-Assignments"]))
 
         /*
 			Group each entry in result.Routes by Bus ID
@@ -133,8 +135,8 @@ var do_file = (function () {
         // file read into the form.
         var f = files[0];
         var reader = new FileReader();
-				var target = document.getElementById('spin_box')
-				spinner.spin(target);
+        var target = document.getElementById('spin_box')
+        spinner.spin(target);
         reader.onload = function (e) {
             var data = e.target.result;
             if (!rABS)

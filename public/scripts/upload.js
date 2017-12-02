@@ -126,6 +126,7 @@ var do_file = (function() {
 
 
 	return function do_file(files) {
+        console.log(files[0])
 		rABS = domrabs.checked;
 		var f = files[0];
 		var reader = new FileReader();

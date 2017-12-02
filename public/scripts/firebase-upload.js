@@ -1,5 +1,5 @@
 // This function requires an instance of native File object
-function upload_to_db(file) {
+function uploadToDB(file) {
     if (!globalUser) {
         throw 'Must be signed in to upload solution!'
     } else {

@@ -4,7 +4,7 @@ const config = {
     authDomain: "bps-bus.firebaseapp.com",
     databaseURL: "https://bps-bus.firebaseio.com",
     projectId: "bps-bus",
-    storageBucket: "",
+    storageBucket: "gs://bps-bus.appspot.com/",
     messagingSenderId: "480595233088"
 };
 firebase.initializeApp(config);

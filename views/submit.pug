@@ -1,10 +1,9 @@
 extends layout
 
 block content
-  script(src='shim.js')
-  script(src='xlsx.full.min.js')
-  script(src = 'spin.min.js')
-  script(src='formatJSON.js')
+  script(src='/scripts/shim.js')
+  script(src='/scripts/xlsx.full.min.js')
+  script(src='/scripts/spin.min.js')
   .container.mt-5
       h4 Submit a Solution to the BPS Challenge
       .row
@@ -30,7 +29,6 @@ block content
       .row
         pre#out.
         #htmlout
-        script(src='jquery.min.js')
-        script(src = 'upload.js')
-        script(type='text/javascript').
-          do_file()
+        script(src='/scripts/jquery.min.js')
+        script(src='/scripts/upload.js')
+        script(src='/scripts/firebase-upload.js')

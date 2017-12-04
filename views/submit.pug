@@ -25,16 +25,11 @@ block content
         .row
             Or click here to select a file
         .row
-            input#xlf(type='file', name='xlfile')
+            input#xlf(type='file', name='xlfile',accept=".xlsx,.xls,.XLSX,.XLS")
         .row
             | Use readAsBinaryString: (when available)
             input(type='checkbox', name='userabs', checked='')
-        .row
-            | Output Format:
-            select(name='format', onchange='setfmt()')
-                option(value='json', selected='')  JSON
-                option(value='csv')  CSV
-                option(value='html')  HTML
+
         .row
             #spin_box(style="height: 100px; width: 100px; position: relative; background-color: white; text-align: center;")
         .row

@@ -28,67 +28,89 @@ var opts = {
     position: 'relative' // Element positioning
 };
 var spinner  = new Spinner(opts);
+var target = document.getElementById('spin_box')
 
 function process_wb(wb) {
-    var OUT = document.getElementById('out');
+  var OUT = document.getElementById('out');
 	var HTMLOUT = document.getElementById('htmlout');
+  spinner.spin(target);
 
-    var _process = {
-        get_format: function() {
-            var radios = document.getElementsByName( "format" );
-            for(var i = 0; i < radios.length; ++i) if(radios[i].checked || radios.length === 1) return radios[i].value;
-        },
-        formats: {
-            to_json: function(workbook) {
-                var result = [];
-                workbook.SheetNames.forEach(function(sheetName) {
-                    var roa = X.utils.sheet_to_json(workbook.Sheets[sheetName]);
-                    if(roa.length) result[sheetName] = roa;
-                });
 
-                var output = {}
-                for (var i = 0; i < result.Routes.length; i++) {
-                    var cur = result.Routes[i]
-                    if (!(cur['Bus ID'] in output)) {
-                        output[cur['Bus ID']] = []
-                    } else {
-                        output[cur['Bus ID']].push(utils.serDes.serialize(cur['Waypoint Latitude'], cur['Waypoint Longitude']))
-                    }
-                }
-                spinner.stop()
-                return JSON.stringify(output);
-            },
-            to_csv: function(workbook) {
-                var result = [];
-                workbook.SheetNames.forEach(function(sheetName) {
-                    var csv = X.utils.sheet_to_csv(workbook.Sheets[sheetName]);
-                    if(csv.length){
-                        result.push("SHEET: " + sheetName);
-                        result.push("");
-                        result.push(csv);
-                    }
-                });
-                return result.join("\n");
-            },
-            to_html: function(workbook) {
-                HTMLOUT.innerHTML = "";
-                workbook.SheetNames.forEach(function(sheetName) {
-                    var htmlstr = X.write(workbook, {sheet:sheetName, type:'binary', bookType:'html'});
-                    HTMLOUT.innerHTML += htmlstr;
-                });
-                return "";
+
+  var _to_json = function(workbook){
+    var result = [];
+    workbook.SheetNames.forEach(function(sheetName) {
+      sheetName = sheetName.trim()
+
+        if (sheetName != 'Buses' && sheetName != 'Stop-Assignments' && sheetName != 'Routes'){
+          spinner.stop();
+          alert('Workbook must contain 3 sheets called Buses, Stop-Assignments, and Routes. Please check your submission and try again.')
+          throw new Error('InvalidExcelFile');
+        }
+
+        var headers = get_header_row(workbook.Sheets[sheetName])
+
+        let buses_headers = ["Bus Capacity", "Bus ID", "Bus Longitude", "Bus Latitude", "Bus Type", "Bus Yard", "Bus Yard Address"];
+        let stops_headers = ["Student Longitude", "Student Latitude", "Pickup Type", "Maximum Walk Distance", "School Longitude", "School Latitude", "Bus ID", "Stop Longitude", "Stop Latitude"]
+        let routes_headers = ["Bus ID", "Waypoint Longitude", "Waypoint Latitude"]
+
+        if (sheetName == 'Buses'){
+          for (var i = 0; i < buses_headers.length; i++){
+            var h = buses_headers[i];
+            if (headers.indexOf(h.trim()) == -1){
+              spinner.stop();
+              alert('Buses sheet must contain the following columns: ' + buses_headers.join(", "));
+              throw new Error('InvalidExcelFile');
             }
+          }
+        }
+        else if (sheetName == 'Stop-Assignments'){
+          for (var i = 0; i < stops_headers.length; i++){
+            var h = stops_headers[i];
+            if (headers.indexOf(h.trim()) == -1){
+              spinner.stop();
+              alert('Stop Assignments sheet must contain the following columns: ' + stops_headers.join(", "));
+              throw new Error('InvalidExcelFile');
+            }
+          }
+        }
+        else{
+          for (var i = 0; i < routes_headers.length; i++){
+            var h = routes_headers[i];
+            if (headers.indexOf(h.trim()) == -1){
+              spinner.stop();
+              alert('Routes sheet must contain the following columns: ' + routes_headers.join(", "));
+              throw new Error('InvalidExcelFile');
+        }
+      }
+    }
+
+    var roa = X.utils.sheet_to_json(workbook.Sheets[sheetName]);
+    if(roa.length) result[sheetName] = roa;
+    });
+
+    if (Object.keys(result).length != 3 ){
+      spinner.stop();
+      alert('Workbook must contain 3 sheets called Buses, Stop-Assignments, and Routes. Please check your submission and try again.')
+      throw new Error('InvalidExcelFile');
+    }
+
+    var output = {}
+    for (var i = 0; i < result.Routes.length; i++) {
+        var cur = result.Routes[i]
+        if (!(cur['Bus ID'] in output)) {
+            output[cur['Bus ID']] = []
+        } else {
+            output[cur['Bus ID']].push(utils.serDes.serialize(cur['Waypoint Latitude'], cur['Waypoint Longitude']))
         }
     }
-    
+    spinner.stop();
+    return JSON.stringify(output);
+  }
+
     global_wb = wb;
-    var output = "";
-    switch(_process.get_format()) {
-        case "form": output = _process.formats.to_fmla(wb); break;
-        case "html": output = _process.formats.to_html(wb); break;
-        case "json": output = _process.formats.to_json(wb); break;
-        default: output = _process.formats.to_csv(wb);
-    }
+    var output = _to_json(wb);
+
     if(OUT.innerText === undefined) OUT.textContent = output;
     else OUT.innerText = output;
     if(typeof console !== 'undefined') console.log("output", new Date());
@@ -101,7 +123,7 @@ function do_file(files) {
     var domrabs = document.getElementsByName("userabs")[0];
     if(!rABS) domrabs.disabled = !(domrabs.checked = false);
     rABS = domrabs.checked;
-    
+
     var f = files[0];
     var reader = new FileReader();
     var target = document.getElementById('spin_box')
@@ -126,19 +148,19 @@ var upload = {
     _attachDropEventListener: function() {
         var drop = document.getElementById('drop');
         if(!drop.addEventListener) return;
-    
+
         function handleDrop(e) {
             e.stopPropagation();
             e.preventDefault();
             do_file(e.dataTransfer.files);
         }
-    
+
         function handleDragover(e) {
             e.stopPropagation();
             e.preventDefault();
             e.dataTransfer.dropEffect = 'copy';
         }
-    
+
         drop.addEventListener('dragenter', handleDragover, false);
         drop.addEventListener('dragover', handleDragover, false);
         drop.addEventListener('drop', handleDrop, false);
@@ -154,6 +176,24 @@ var upload = {
         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
     }
+}
+
+spinner.spin(target);
+
+function get_header_row(sheet) {
+    var headers = [];
+    var range = XLSX.utils.decode_range(sheet['!ref']);
+    var C, R = range.s.r; /* start in the first row */
+    /* walk every column in the range */
+    for(C = range.s.c; C <= range.e.c; ++C) {
+        var cell = sheet[XLSX.utils.encode_cell({c:C, r:R})] /* find the cell in the first row */
+
+        var hdr = "UNKNOWN " + C; // <-- replace with your desired default
+        if(cell && cell.t) hdr = XLSX.utils.format_cell(cell);
+
+        headers.push(hdr);
+    }
+    return headers;
 }
 
 var _gaq = _gaq || [];

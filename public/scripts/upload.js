@@ -30,57 +30,62 @@ var opts = {
 var spinner  = new Spinner(opts);
 var target = document.getElementById('spin_box')
 
+var process_workbook = {
+  _toJson : function(workbook) {
+
+  },
+}
+spinner.spin()
+var result = process_workbook._toJson(workbook, function(err, result) {
+  if (err) {
+    alert(err)
+  }
+  spinner.stop()
+  // ... other stuff
+})
+
 function process_wb(wb) {
   var OUT = document.getElementById('out');
 	var HTMLOUT = document.getElementById('htmlout');
   spinner.spin(target);
 
-
+  let buses_headers = ["Bus Capacity", "Bus ID", "Bus Longitude", "Bus Latitude", "Bus Type", "Bus Yard", "Bus Yard Address"];
+  let stops_headers = ["Student Longitude", "Student Latitude", "Pickup Type", "Maximum Walk Distance", "School Longitude", "School Latitude", "Bus ID", "Stop Longitude", "Stop Latitude"]
+  let routes_headers = ["Bus ID", "Waypoint Longitude", "Waypoint Latitude"]
 
   var _to_json = function(workbook){
-    var result = [];
+    var error = '';
+    if (workbook.SheetNames.length < 3 || workbook.SheetNames.indexOf("Buses") == -1 || workbook.SheetNames.indexOf("Stop-Assignments") == -1 || workbook.SheetNames.indexOf("Routes") == -1 ){
+      error =  "Wrong Sheets Error"
+      return error;
+    }
+
     workbook.SheetNames.forEach(function(sheetName) {
       sheetName = sheetName.trim()
 
-        if (sheetName != 'Buses' && sheetName != 'Stop-Assignments' && sheetName != 'Routes'){
-          spinner.stop();
-          alert('Workbook must contain 3 sheets called Buses, Stop-Assignments, and Routes. Please check your submission and try again.')
-          throw new Error('InvalidExcelFile');
-        }
-
         var headers = get_header_row(workbook.Sheets[sheetName])
-
-        let buses_headers = ["Bus Capacity", "Bus ID", "Bus Longitude", "Bus Latitude", "Bus Type", "Bus Yard", "Bus Yard Address"];
-        let stops_headers = ["Student Longitude", "Student Latitude", "Pickup Type", "Maximum Walk Distance", "School Longitude", "School Latitude", "Bus ID", "Stop Longitude", "Stop Latitude"]
-        let routes_headers = ["Bus ID", "Waypoint Longitude", "Waypoint Latitude"]
 
         if (sheetName == 'Buses'){
           for (var i = 0; i < buses_headers.length; i++){
             var h = buses_headers[i];
-            if (headers.indexOf(h.trim()) == -1){
-              spinner.stop();
-              alert('Buses sheet must contain the following columns: ' + buses_headers.join(", "));
-              throw new Error('InvalidExcelFile');
+            if (headers.indexOf(h) == -1){
+              error = "Buses Error"
             }
           }
         }
         else if (sheetName == 'Stop-Assignments'){
           for (var i = 0; i < stops_headers.length; i++){
             var h = stops_headers[i];
-            if (headers.indexOf(h.trim()) == -1){
-              spinner.stop();
-              alert('Stop Assignments sheet must contain the following columns: ' + stops_headers.join(", "));
-              throw new Error('InvalidExcelFile');
+            if (headers.indexOf(h) == -1){
+              error = "Stop-Assignments Error"
             }
           }
         }
         else{
           for (var i = 0; i < routes_headers.length; i++){
             var h = routes_headers[i];
-            if (headers.indexOf(h.trim()) == -1){
-              spinner.stop();
-              alert('Routes sheet must contain the following columns: ' + routes_headers.join(", "));
-              throw new Error('InvalidExcelFile');
+            if (headers.indexOf(h) == -1){
+              error = "Routes Error"
         }
       }
     }
@@ -89,12 +94,10 @@ function process_wb(wb) {
     if(roa.length) result[sheetName] = roa;
     });
 
-    if (Object.keys(result).length != 3 ){
-      spinner.stop();
-      alert('Workbook must contain 3 sheets called Buses, Stop-Assignments, and Routes. Please check your submission and try again.')
-      throw new Error('InvalidExcelFile');
-    }
 
+    if (error){
+      return error;
+    }
     var output = {}
     for (var i = 0; i < result.Routes.length; i++) {
         var cur = result.Routes[i]
@@ -104,12 +107,33 @@ function process_wb(wb) {
             output[cur['Bus ID']].push(utils.serDes.serialize(cur['Waypoint Latitude'], cur['Waypoint Longitude']))
         }
     }
-    spinner.stop();
     return JSON.stringify(output);
   }
-
     global_wb = wb;
     var output = _to_json(wb);
+
+    spinner.stop();
+
+    if (output == "Buses Error"){
+      alert('Buses sheet must contain the following columns: ' + buses_headers.join(", "));
+      throw new Error('InvalidExcelFile');
+    }
+
+    if (output == "Stop-Assignments Error"){
+      alert('Stop Assignments sheet must contain the following columns: ' + stops_headers.join(", "));
+      throw new Error('InvalidExcelFile');
+    }
+
+    if (output == "Routes Error"){
+      alert('Routes sheet must contain the following columns: ' + routes_headers.join(", "));
+      throw new Error('InvalidExcelFile');
+    }
+
+    if (output == "Wrong Sheets Error"){
+      alert('Workbook must contain 3 sheets called Buses, Stop-Assignments, and Routes. Please check your submission and try again.')
+      throw new Error('InvalidExcelFile');
+    }
+
 
     if(OUT.innerText === undefined) OUT.textContent = output;
     else OUT.innerText = output;
@@ -186,9 +210,9 @@ function get_header_row(sheet) {
     var C, R = range.s.r; /* start in the first row */
     /* walk every column in the range */
     for(C = range.s.c; C <= range.e.c; ++C) {
-        var cell = sheet[XLSX.utils.encode_cell({c:C, r:R})] /* find the cell in the first row */
+        var cell = sheet[XLSX.utils.encode_cell({c:C, r:R})]
 
-        var hdr = "UNKNOWN " + C; // <-- replace with your desired default
+        var hdr = "UNKNOWN " + C;
         if(cell && cell.t) hdr = XLSX.utils.format_cell(cell);
 
         headers.push(hdr);

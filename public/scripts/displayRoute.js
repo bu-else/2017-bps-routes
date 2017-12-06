@@ -13,7 +13,7 @@ var routeMap = {
             maxZoom: 18,
             id: 'mapbox.streets',
             // Make sure you remove the accessToken before you commit!!!!!!!!!!!
-            accessToken: 'pk.eyJ1Ijoiam1jYWxvb24iLCJhIjoiY2phcjVnN2NtNGZleTJ6cGwzZ3Bqemp6cSJ9.UgRhGEr_tFEODbrw0Uu5CA'
+            accessToken: 'ACCESS TOKEN'
         }).addTo(map);
     }
 }

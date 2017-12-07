@@ -1,29 +1,39 @@
 extends layout
 
-block content
-  script(src='shim.js')
-  script(src='xlsx.full.min.js')
-  script(src = 'spin.min.js')
-  script(src='formatJSON.js')
-  .container.mt-5
-      h4 Submit a Solution to the BPS Challenge
-      .row
-        .file-drop-container
-          #drop(style="height: 200px; width: 500px; background-color: white; border-style: dashed; border-color: black; border-radius: 30px; text-align: center;")
-            | Drop a solution here
-            br
-            br
-            br
-            br
-            | Or click here to select a file:
-            input#xlf(type='file', name='xlfile', accept=".xlsx,.xls,.XLSX,.XLS")
-      .row
-        #spin_box(style="height: 100px; width: 100px; position: relative; background-color: white; text-align: center;")
+block additionalHead
+    link(rel="stylesheet", href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css")
 
-      .row
-        pre#out.
-        #htmlout
-        script(src='jquery.min.js')
-        script(src = 'upload.js')
-        script(src='validate.js')
-        script(type='text/javascript').
+    script(src='/scripts/utils.js')
+    script(src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js")
+    script(src='/scripts/shim.js')
+    script(src='/scripts/xlsx.full.min.js')
+    script(src='/scripts/spin.min.js')
+    script(src='/scripts/upload.js')
+    script(src='/scripts/firebase-upload.js')
+    script(src='/scripts/displayRoute.js')
+    script(src='/scripts/randomColor.js')
+    
+    //- submitInit must be the last file that's loaded
+    script(src='/scripts/submitInit.js')
+
+block content
+    .container.mt-5
+        h4 Submit a Solution to the BPS Challenge
+        .row
+            .file-drop-container
+            #drop(style="height: 200px; width: 500px; background-color: white; border-style: dashed; border-color: black; border-radius: 30px; text-align: center;") Drop a solution here
+        .row
+            Or click here to select a file
+        .row
+            input#xlf(type='file', name='xlfile',accept=".xlsx,.xls,.XLSX,.XLS")
+        .row
+            | Use readAsBinaryString: (when available)
+            input(type='checkbox', name='userabs', checked='')
+
+        .row
+            #spin_box(style="height: 100px; width: 100px; position: relative; background-color: white; text-align: center;")
+        .row
+            #mapid(style={height: "500px", width: "100%"})
+        .row
+            pre#out.
+            #htmlout

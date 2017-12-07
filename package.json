@@ -20,7 +20,8 @@
     "pug": "~2.0.0-beta11",
     "serve-favicon": "^2.4.5",
     "webpack": "^3.8.1",
-    "xlsx": "^0.11.10"
+    "xlsx": "^0.11.10",
+    "spin.js": "^3.0.0"
   },
   "devDependencies": {
     "karma": "^1.7.1",

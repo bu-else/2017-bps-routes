@@ -1,5 +1,7 @@
 /**
  * Tool to convert a Excel .xlsx spreadsheet to .json
+ * 
+ * node xlsx2json.js excel-file.json
  */
 
 const XLSX = require('xlsx');
@@ -18,7 +20,7 @@ function parseFile(path, transformer) {
             console.log(`Got sheet ${v}.`);
             let sheetJson = XLSX
                 .utils
-                .sheet_to_json(workbook.Sheets[v]);
+                .sheet_to_json(workbook.Sheets[v], {raw: true});
             fs.writeFile(`${path}.${v}.json`, JSON.stringify(transformer(sheetJson, v)), (err) => {
                 return console.log(err);
             });
@@ -32,8 +34,12 @@ function main() {
         let inputFile = ARGV[0];
 
         function groupByBus (sheet,sheetName) {
-            if (sheetName == "Sheet1"){
+            if (sheetName == "Routes"){
                 return groupBy(sheet, 'Bus ID');
+            } else if (sheetName == "Buses") {
+                return sheet;
+            } else if (sheetName == "Stop-Assignments"){
+                return sheet;
             }
 
         }

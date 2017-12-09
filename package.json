@@ -24,8 +24,11 @@
     "spin.js": "^3.0.0"
   },
   "devDependencies": {
+    "jsdom": "11.5.1",
+    "jsdom-global": "3.0.2",
     "karma": "^1.7.1",
-    "mocha": "^4.0.1"
+    "mocha": "^4.0.1",
+    "mocha-jsdom": "^1.1.0"
   },
   "scripts": {
     "start": "node ./bin/www",

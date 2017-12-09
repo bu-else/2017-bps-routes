@@ -95,7 +95,7 @@ if (typeof window !== 'undefined') {
             var data = e.target.result;
             console.log("spin")
             spinner.spin()
-            var workbook = (XLSX.read(data, {type: 'binary'}))
+            var workbook = XLSX.read(data, {type: 'binary'})
             workbookProcessor.process(workbook, function(err, result) {
                 if (err) {
                     console.log(err)

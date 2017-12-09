@@ -1,4 +1,7 @@
+<<<<<<< HEAD
+=======
 node_modules
+>>>>>>> master
 # Logs
 logs
 *.log
@@ -60,4 +63,8 @@ typings/
 
 .idea
 
+.vscode
+
 .DS_Store
+
+tools/sheets

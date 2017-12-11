@@ -75,7 +75,7 @@ function routeDistance(route) {
  * 
  * @param {*} routes 
  */
-function routesDistances(routes) {
+function routesDistance(routes) {
 	var rr = {};
 	for (var r in routes) {
 		rr[r] = routeDistance(routes[r]);
@@ -83,20 +83,32 @@ function routesDistances(routes) {
 	return rr;
 }
 
-// function main() {
-// 	testJson = {
-// 		"B286": [
-// 			["a", "b"],
-// 			["a", "b"]
-// 		],
-// 		"B287": [
-// 			["a", "b"],
-// 			["a", "b"]
-// 		]
-// 	};
-// 	console.log(`Number of Buses: ${numberOfBuses(testJson)}`);
-// 	console.log(`Distance: ${distance([0, 0], [45, 45])}`);
-// 	console.log(`Route distance: ${routeDistance([[0,0], [30,30], [60,60], [90,90]])}`);
-// 	console.log(`Routes distances: ${JSON.stringify(routesDistance({"a": [[0, 0], [90, 90]], "b": [[0,0], [30,30], [60,60], [90,90]], "c": [[0, 0],[45,45], [90, 90]] }))}`);
-// }
-main();
+function distanceTraveledByStudent(routes, stopAssignments) {
+    return new Promise(function(resolve, reject) {
+        var result = []
+        for (var i = 0; i < stopAssignments.length; i++) {
+            var student = stopAssignments[i]
+            if (!routes.hasOwnProperty(student['Bus ID'])) {
+                reject('Bus with ID of ' + student['Bus ID'] + ' not found in routes')
+            }
+            var route = routes[student['Bus ID']]
+            var serializedPickUp = utils.serDes.serialize(student['Stop Latitude'], student['Stop Longitude'])
+            var serializedSchool = utils.serDes.serialize(student['School Latitude'], student['School Longitude'])
+            var start = end = -1
+            for (var j = 1; j < route.length; j++) {
+                if (start === -1 && route[j] === serializedPickUp) {
+                    start = j
+                } 
+                else if (start !== -1 && end === -1 && route[j] === serializedSchool) {
+                    end = j
+                    break
+                }
+            }
+            if (start === end) {
+                reject('Something terrible has happened...')
+            }
+            result.push(end - start)
+        }
+        resolve(result)
+    })
+}

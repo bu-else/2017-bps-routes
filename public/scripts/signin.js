@@ -5,7 +5,6 @@ const config = {
     databaseURL: "https://bps-bus.firebaseio.com",
     projectId: "bps-bus",
     storageBucket: "gs://bps-bus.appspot.com/",
-    messagingSenderId: "480595233088"
 };
 firebase.initializeApp(config);
 

@@ -40,7 +40,7 @@ var workbookProcessor = {
             workbook.SheetNames.indexOf("Buses") == -1 ||
             workbook.SheetNames.indexOf("Stop-Assignments") == -1 ||
             workbook.SheetNames.indexOf("Routes") == -1 ){
-                return callback("Wrong Sheets Error");
+                return callback("The workbook must have at least 3 sheets: 'Buses', 'Stop-Assignments' and 'Routes'");
         }
         workbook.SheetNames.forEach(function(sheetName) {
             sheetName = sheetName.trim()
@@ -78,37 +78,68 @@ var workbookProcessor = {
         return callback(null, result)
     },
     process: function(workbook, callback) {
-      console.log(JSON.stringify(workbook))
-      if(typeof require !== 'undefined'){
-        var XLSX = require('xlsx');
-        var workbook = XLSX.readFile(JSON.stringify(workbook));
-      }
-
-      workbookProcessor._process(workbook, function(err, result) {
-          if (err) {
-              return callback(err)
-          } else {
-              return callback(null, res)
-          }
-      })
+        console.log(JSON.stringify(workbook))
+        if(typeof require !== 'undefined'){
+          var XLSX = require('xlsx');
+          var workbook = XLSX.readFile(JSON.stringify(workbook));
+        }
+        workbookProcessor._process(workbook, function(err, res) {
+            if (err) {
+                return callback(err)
+            }
+            return callback(null, res)
+        })
+    },
+    groupRoutesByBusId: function(routes) {
+        var result = {}
+        for (var i = 0; i < routes.length; i++) {
+            var cur = routes[i]
+            var busID = cur['Bus ID']
+            var lat = cur['Waypoint Latitude']
+            var long = cur['Waypoint Longitude']
+            if (result.hasOwnProperty(busID)) {
+                result[busID].push([lat, long])
+            } else {
+                result[busID] = [[lat, long]]
+            }
+        }
+        return result
     }
 }
 
 if (typeof window !== 'undefined') {
     // If the running environment is on a browser, attach do_file to the window (makes it a global variable)
     window.do_file = function(files) {
-        var f = files[0];
+        var f = files[0]
         var reader = new FileReader()
         reader.onload = function(e) {
-            var data = e.target.result;
-            console.log("spin")
-            spinner.spin()
-            var workbook = (XLSX.read(data, {type: 'binary'}))
+            var data = e.target.result
+            var workbook = XLSX.read(data, {type: 'binary'})
             workbookProcessor.process(workbook, function(err, result) {
+                // spinner.stop()
                 if (err) {
-                    console.log(err)
+                    showModal(err)
                 } else {
-                    console.log(result)
+                    window.globalFile = f
+                    var routes = workbookProcessor.groupRoutesByBusId(result.Routes)
+                    var distances = routesDistance(routes)
+                    var sum = 0
+                    var max = -1
+                    var numBuses = 0
+                    for (var busId in distances) {
+                        numBuses += 1
+                        var distance = distances[busId]
+                        if (distance > max) {
+                            max = parseFloat(distance)
+                        }
+                        sum += parseFloat(distance)
+                    }
+                    var avg = sum / numBuses
+                    var resultText = document.getElementById("result-text")
+                    resultText.innerText = "Average Distance Traveled: " + avg.toFixed(2) + "m\nMax Distance Traveled: " + max.toFixed(2) + "m"
+                    var flows = document.getElementById("flows")
+                    routeMap.displayBusRoutes(routes)
+                    flows.classList.add("two")
                 }
             })
         }
@@ -116,11 +147,20 @@ if (typeof window !== 'undefined') {
     }
 }
 
+<<<<<<< HEAD
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = workbookProcessor;
 }
 
 
+=======
+function showModal(msg) {
+    bootbox.alert({
+        message: msg
+    })
+}
+
+>>>>>>> e7e3fda632e3eee39fd372b829330f12be1530ab
 var upload = {
     init: function() {
         this._attachDropEventListener();

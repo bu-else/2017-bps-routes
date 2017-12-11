@@ -2,9 +2,11 @@ extends layout
 
 block additionalHead
     link(rel="stylesheet", href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css")
+    link(rel="stylesheet", href="/stylesheets/submit.css")
 
     script(src='/scripts/utils.js')
     script(src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js")
+    script(src="/scripts/bootbox.js")
     script(src='/scripts/shim.js')
     script(src='/scripts/xlsx.full.min.js')
     script(src='/scripts/spin.min.js')
@@ -13,24 +15,26 @@ block additionalHead
     script(src='/scripts/displayRoute.js')
     script(src='/scripts/randomColor.js')
     script(src='/scripts/spinner.js')
+    script(src='/scripts/evaluate.js')
     
     //- submitInit must be the last file that's loaded
     script(src='/scripts/submitInit.js')
 
 block content
-    .container.mt-5
-        h4 Submit a Solution to the BPS Challenge
-        .row
+    //- .container.mt-5
+    //-     h4 Submit a Solution to the BPS Challenge
+    #flows
+        #modalContainer
+        .frame.upload
+            h4 Submit a Solution to the BPS Challenge
+            h6 **Once you select your file, the website will likely freeze for about a minute
             .file-drop-container
-            #drop(style="height: 200px; width: 500px; background-color: white; border-style: dashed; border-color: black; border-radius: 30px; text-align: center;") Drop a solution here
-        .row
-            Or click here to select a file
-        .row
-            input#xlf(type='file', name='xlfile',accept=".xlsx,.xls,.XLSX,.XLS")
-        .row
-            #spin_box(style="height: 100px; width: 100px; position: relative; background-color: white; text-align: center;")
-        .row
-            #mapid(style={height: "500px", width: "100%"})
-        .row
-            pre#out.
-            #htmlout
+                #drop
+                    p Drop your solution here
+            p or
+            label.select-file-container Click here to select a file
+                input#xlf(type='file', name='xlfile',accept=".xlsx,.xls,.XLSX,.XLS")
+        .frame.result
+            p#result-text Loading your result...
+            #mapid(style={height: "300px", width: "60%"})
+            button#save Save your solution

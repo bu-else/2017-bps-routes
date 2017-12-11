@@ -5,8 +5,8 @@ var workbookProcessor = {
             return
         }
         if (typeof XLSX === 'undefined') {
-            this._initialized = false
-            throw new Error('XLSX is not properly loaded in the global scope')
+            this._initialized = true
+            var XLSX = require('xlsx');
         } else {
             this._initialized = true
             this._XLSX = XLSX
@@ -25,14 +25,15 @@ var workbookProcessor = {
             var cell = sheet[this._XLSX.utils.encode_cell({c:C, r:R})]
             var hdr = "UNKNOWN " + C;
             if(cell && cell.t) hdr = this._XLSX.utils.format_cell(cell);
-    
+
             headers.push(hdr);
         }
         return headers;
     },
     _process : function(workbook, callback) {
         // use workbookProcessor.process(workbook, callback) THIS IS A "PRIVATE" method
-        var that = this // this is needed to preserve reference to workbookProcessor object        
+        //console.log(JSON.stringify(workbook))
+        var that = this // this is needed to preserve reference to workbookProcessor object
         var result = {}
 
         if (workbook.SheetNames.length < 3 ||
@@ -77,12 +78,18 @@ var workbookProcessor = {
         return callback(null, result)
     },
     process: function(workbook, callback) {
-        workbookProcessor._process(workbook, function(err, res) {
+      console.log(JSON.stringify(workbook))
+      if(typeof require !== 'undefined'){
+        XLSX = require('xlsx');
+        var workbook = XLSX.readFile(JSON.stringify(workbook));
+        workbookProcessor._process(workbook, function(err, result) {
             if (err) {
                 return callback(err)
+            } else {
+                return callback(null, res)
             }
-            return callback(null, res)
         })
+      }
     }
 }
 
@@ -107,6 +114,11 @@ if (typeof window !== 'undefined') {
         reader.readAsBinaryString(f);
     }
 }
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = workbookProcessor;
+}
+
 
 var upload = {
     init: function() {

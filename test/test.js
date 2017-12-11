@@ -1,11 +1,12 @@
 var chai = require('chai');
 var assert = chai.assert;
 var path = require('path');
-// require('jsdom-global')()
-// var upload = require(path.resolve(__dirname,"../public/scripts/upload.js"));
-// var excelFiles = require( path.resolve( __dirname, "./excelFiles.js" ));
+var XLSX = require('xlsx')
+var upload = require(path.resolve(__dirname,"../public/scripts/upload.js"));
+var excelFiles = require( path.resolve( __dirname, "./excelFiles.js" ));
 
-var importTest = require(path.resolve(__dirname, "../public/scripts/importTest.js"))
+console.log(Object.keys(upload));
+
 
 let buses_headers = ["Bus Capacity", "Bus ID", "Bus Longitude", "Bus Latitude", "Bus Type", "Bus Yard", "Bus Yard Address"];
 let stops_headers = ["Student Longitude", "Student Latitude", "Pickup Type", "Maximum Walk Distance", "School Longitude", "School Latitude", "Bus ID", "Stop Longitude", "Stop Latitude"]
@@ -21,7 +22,9 @@ describe('Basic test', function() {
 
 describe('Import Test', function() {
   it('Runs an imported function', function() {
-    assert.equal("world", importTest.hello())
+    upload.init()
+    assert.equal("", upload.process(excelFiles.x))
+    //assert.equal("world", upload._getHeaderRow(excelFiles.goodExcel))
   })
 })
 

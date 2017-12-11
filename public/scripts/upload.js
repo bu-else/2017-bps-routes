@@ -80,16 +80,17 @@ var workbookProcessor = {
     process: function(workbook, callback) {
       console.log(JSON.stringify(workbook))
       if(typeof require !== 'undefined'){
-        XLSX = require('xlsx');
+        var XLSX = require('xlsx');
         var workbook = XLSX.readFile(JSON.stringify(workbook));
-        workbookProcessor._process(workbook, function(err, result) {
-            if (err) {
-                return callback(err)
-            } else {
-                return callback(null, res)
-            }
-        })
       }
+
+      workbookProcessor._process(workbook, function(err, result) {
+          if (err) {
+              return callback(err)
+          } else {
+              return callback(null, res)
+          }
+      })
     }
 }
 

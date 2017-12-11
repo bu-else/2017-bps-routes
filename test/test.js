@@ -22,9 +22,7 @@ describe('Basic test', function() {
 
 describe('Import Test', function() {
   it('Runs an imported function', function() {
-    upload.init()
-    assert.equal("", upload.process(excelFiles.x))
-    //assert.equal("world", upload._getHeaderRow(excelFiles.goodExcel))
+    assert.equal("", upload._process(excelFiles.goodExcel))
   })
 })
 

@@ -33,18 +33,18 @@ function toRadians(degree) {
  * @returns {number} distance in meters
  */
 function distance(begin, end) {
-	let lat1 = begin[1];
-	let lat2 = end[1];
-	let lon1 = begin[0];
-	let lon2 = end[0];
-	let R = 6371e3; // metres
-	let φ1 = toRadians(lat1);
-	let φ2 = toRadians(lat2);
-	let Δφ = toRadians(lat2 - lat1);
-	let Δλ = toRadians(lon2 - lon1);
-	let a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) + Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-	let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-	let d = R * c;
+	var lat1 = begin[1];
+	var lat2 = end[1];
+	var lon1 = begin[0];
+	var lon2 = end[0];
+	var R = 6371e3; // metres
+	var φ1 = toRadians(lat1);
+	var φ2 = toRadians(lat2);
+	var Δφ = toRadians(lat2 - lat1);
+	var Δλ = toRadians(lon2 - lon1);
+	var a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) + Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+	var d = R * c;
 	return d;
 }
 /**
@@ -54,7 +54,6 @@ function distance(begin, end) {
  */
 function routeDistance(route) {
 	return route.reduce((acc, curVal, curIx, arr) => {
-
         // This probably not a best usage of reduce now that I think about it :D
         if (arr.length === 2) {
             return distance(arr[0], arr[1]);
@@ -77,27 +76,39 @@ function routeDistance(route) {
  * @param {*} routes 
  */
 function routesDistance(routes) {
-	let rr = {};
-	for (let r in routes) {
+	var rr = {};
+	for (var r in routes) {
 		rr[r] = routeDistance(routes[r]);
 	}
 	return rr;
 }
 
-function main() {
-	testJson = {
-		"B286": [
-			["a", "b"],
-			["a", "b"]
-		],
-		"B287": [
-			["a", "b"],
-			["a", "b"]
-		]
-	};
-	console.log(`Number of Buses: ${numberOfBuses(testJson)}`);
-	console.log(`Distance: ${distance([0, 0], [45, 45])}`);
-	console.log(`Route distance: ${routeDistance([[0,0], [30,30], [60,60], [90,90]])}`);
-	console.log(`Routes distances: ${JSON.stringify(routesDistance({"a": [[0, 0], [90, 90]], "b": [[0,0], [30,30], [60,60], [90,90]], "c": [[0, 0],[45,45], [90, 90]] }))}`);
+function distanceTraveledByStudent(routes, stopAssignments) {
+    return new Promise(function(resolve, reject) {
+        var result = []
+        for (var i = 0; i < stopAssignments.length; i++) {
+            var student = stopAssignments[i]
+            if (!routes.hasOwnProperty(student['Bus ID'])) {
+                reject('Bus with ID of ' + student['Bus ID'] + ' not found in routes')
+            }
+            var route = routes[student['Bus ID']]
+            var serializedPickUp = utils.serDes.serialize(student['Stop Latitude'], student['Stop Longitude'])
+            var serializedSchool = utils.serDes.serialize(student['School Latitude'], student['School Longitude'])
+            var start = end = -1
+            for (var j = 1; j < route.length; j++) {
+                if (start === -1 && route[j] === serializedPickUp) {
+                    start = j
+                } 
+                else if (start !== -1 && end === -1 && route[j] === serializedSchool) {
+                    end = j
+                    break
+                }
+            }
+            if (start === end) {
+                reject('Something terrible has happened...')
+            }
+            result.push(end - start)
+        }
+        resolve(result)
+    })
 }
-main();

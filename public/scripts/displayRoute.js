@@ -9,19 +9,15 @@ var routeMap = {
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
             maxZoom: 18,
             id: 'mapbox.streets',
-            // Make sure you remove the accessToken before you commit!!!!!!!!!!!
-            accessToken: 'ACCESS TOKEN'
+            accessToken: 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw'
         }).addTo(this.map)
     },
-    _displayBusRoute: function(latlongs, color) {
-        var deserializedLatLongs = latlongs.map(function(coords) {
-            return utils.serDes.deserialize(coords)
-        })
-        var polyline = L.polyline(deserializedLatLongs, {
+    _displayBusRoute: function(latlongs, id, color) {
+        var polyline = L.polyline(latlongs, {
             color: color,
             weight: 5,
             smoothFactor: 1,
-        }).addTo(this.map)
+        }).addTo(this.map).bindPopup(id).openPopup();
         this.map.fitBounds(polyline.getBounds())
     },
     displayBusRoutes: function(latlongsByBus) {
@@ -41,7 +37,7 @@ var routeMap = {
         var colors = randomColor(rColorConfig)
         var colorIndex = 0
         for (var id in latlongsByBus) {
-            _displayBusRoute(latlongsByBus[id], colors[colorIndex++])
+            this._displayBusRoute(latlongsByBus[id], id, colors[colorIndex++])
         }
     }
 }

@@ -5,8 +5,8 @@ var workbookProcessor = {
             return
         }
         if (typeof XLSX === 'undefined') {
-            this._initialized = false
-            throw new Error('XLSX is not properly loaded in the global scope')
+            this._initialized = true
+            this._XLSX = require('xlsx')
         } else {
             this._initialized = true
             this._XLSX = XLSX
@@ -25,14 +25,15 @@ var workbookProcessor = {
             var cell = sheet[this._XLSX.utils.encode_cell({c:C, r:R})]
             var hdr = "UNKNOWN " + C;
             if(cell && cell.t) hdr = this._XLSX.utils.format_cell(cell);
-    
+
             headers.push(hdr);
         }
         return headers;
     },
     _process : function(workbook, callback) {
         // use workbookProcessor.process(workbook, callback) THIS IS A "PRIVATE" method
-        var that = this // this is needed to preserve reference to workbookProcessor object        
+        //console.log(JSON.stringify(workbook))
+        var that = this // this is needed to preserve reference to workbookProcessor object
         var result = {}
 
         if (workbook.SheetNames.length < 3 ||
@@ -49,7 +50,7 @@ var workbookProcessor = {
                     for (var i = 0; i < that._bussesHeaders.length; i++){
                         var h = that._bussesHeaders[i];
                         if (headers.indexOf(h) == -1) {
-                            return callback("Buses Error")
+                            return callback("Buses must include the following columns: Bus Capacity, Bus ID, Bus Longitude, Bus Latitude, Bus Type, Bus Yard, Bus Yard Address")
                         }
                     }
                     break
@@ -57,7 +58,7 @@ var workbookProcessor = {
                     for (var i = 0; i < that._stopsHeaders.length; i++){
                         var h = that._stopsHeaders[i];
                         if (headers.indexOf(h) == -1){
-                            return callback("Stop-Assignments Error")
+                            return callback("Stop-Assignments must include the following columns: Student Longitude, Student Latitude, Pickup Type, Maximum Walk Distance, School Longitude, School Latitude, Bus ID, Stop Longitude, Stop Latitude")
                         }
                     }
                     break
@@ -65,7 +66,7 @@ var workbookProcessor = {
                     for (var i = 0; i < that._routesHeaders.length; i++){
                         var h = that._routesHeaders[i];
                         if (headers.indexOf(h) == -1){
-                            return callback("Routes Error")
+                            return callback("Routes must include the following columns: 'Waypoint Longitude' and 'Waypoint Latitude'")
                         }
                     }
                     break
@@ -74,9 +75,11 @@ var workbookProcessor = {
             var sheet = that._XLSX.utils.sheet_to_json(workbook.Sheets[sheetName])
             if(sheet) result[sheetName] = sheet;
         })
+        //console.log(JSON.stringify(result));
         return callback(null, result)
     },
     process: function(workbook, callback) {
+
         workbookProcessor._process(workbook, function(err, res) {
             if (err) {
                 return callback(err)
@@ -141,12 +144,16 @@ if (typeof window !== 'undefined') {
     }
 }
 
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = workbookProcessor;
+}
+
+
 function showModal(msg) {
     bootbox.alert({
         message: msg
     })
 }
-
 var upload = {
     init: function() {
         this._attachDropEventListener();

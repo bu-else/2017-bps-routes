@@ -12,7 +12,7 @@ html
     script(src="https://unpkg.com/babel-standalone@6/babel.min.js")
     script(src="https://www.gstatic.com/firebasejs/4.5.0/firebase.js")
     script(src="https://cdn.jsdelivr.net/npm/vue")
-    script(src="/scripts/signin.js", type="text/babel")
+    script(src="/scripts/auth.js", type="text/babel")
     
     link(rel='stylesheet', href='/stylesheets/style.css')
     block additionalHead
@@ -29,6 +29,8 @@ html
           ul.nav.navbar-nav.ml-auto.w-100.justify-content-end
             li.nav-item
               a.nav-link(href="#", data-toggle="modal", data-target="#signinModal", id="login-btn", :class="{'hide': loggedIn}") Sign In
+            li.nav-item
+              a.nav-link(href="#", id="logout-btn", :class="{'hide': !loggedOut}", onclick="logout()") Sign Out
     div.modal.fade#signinModal
       div.modal-dialog
         div.modal-content

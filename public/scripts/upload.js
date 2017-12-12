@@ -6,7 +6,7 @@ var workbookProcessor = {
         }
         if (typeof XLSX === 'undefined') {
             this._initialized = true
-            var XLSX = require('xlsx');
+            this._XLSX = require('xlsx')
         } else {
             this._initialized = true
             this._XLSX = XLSX
@@ -50,7 +50,7 @@ var workbookProcessor = {
                     for (var i = 0; i < that._bussesHeaders.length; i++){
                         var h = that._bussesHeaders[i];
                         if (headers.indexOf(h) == -1) {
-                            return callback("Buses Error")
+                            return callback("Buses must include the following columns: Bus Capacity, Bus ID, Bus Longitude, Bus Latitude, Bus Type, Bus Yard, Bus Yard Address")
                         }
                     }
                     break
@@ -58,7 +58,7 @@ var workbookProcessor = {
                     for (var i = 0; i < that._stopsHeaders.length; i++){
                         var h = that._stopsHeaders[i];
                         if (headers.indexOf(h) == -1){
-                            return callback("Stop-Assignments Error")
+                            return callback("Stop-Assignments must include the following columns: Student Longitude, Student Latitude, Pickup Type, Maximum Walk Distance, School Longitude, School Latitude, Bus ID, Stop Longitude, Stop Latitude")
                         }
                     }
                     break
@@ -66,7 +66,7 @@ var workbookProcessor = {
                     for (var i = 0; i < that._routesHeaders.length; i++){
                         var h = that._routesHeaders[i];
                         if (headers.indexOf(h) == -1){
-                            return callback("Routes Error")
+                            return callback("Routes must include the following columns: 'Waypoint Longitude' and 'Waypoint Latitude'")
                         }
                     }
                     break
@@ -75,14 +75,11 @@ var workbookProcessor = {
             var sheet = that._XLSX.utils.sheet_to_json(workbook.Sheets[sheetName])
             if(sheet) result[sheetName] = sheet;
         })
+        //console.log(JSON.stringify(result));
         return callback(null, result)
     },
     process: function(workbook, callback) {
-        console.log(JSON.stringify(workbook))
-        if(typeof require !== 'undefined'){
-          var XLSX = require('xlsx');
-          var workbook = XLSX.readFile(JSON.stringify(workbook));
-        }
+
         workbookProcessor._process(workbook, function(err, res) {
             if (err) {
                 return callback(err)
@@ -147,20 +144,16 @@ if (typeof window !== 'undefined') {
     }
 }
 
-<<<<<<< HEAD
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = workbookProcessor;
 }
 
 
-=======
 function showModal(msg) {
     bootbox.alert({
         message: msg
     })
 }
-
->>>>>>> e7e3fda632e3eee39fd372b829330f12be1530ab
 var upload = {
     init: function() {
         this._attachDropEventListener();

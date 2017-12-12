@@ -6,21 +6,23 @@ const config = {
     projectId: "bps-bus",
     storageBucket: "gs://bps-bus.appspot.com/",
 };
-firebase.initializeApp(config);
+firebase.initializeApp(config)
 
 
-let globalUser = null;
+let globalUser = null
 
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
         // User is signed in
-        console.log("User is signed in");
-        globalUser = user;
-        dispSigninBtn.loggedIn = true;
-        console.log(user);
-        appLogin.name = user.displayName;
-        appLogin.profilePic = user.photoURL;
-        appLogin.email = user.email;
+        console.log("User is signed in")
+        globalUser = user
+        dispSigninBtn.loggedIn = true
+        console.log(user)
+        appLogin.name = user.displayName
+        appLogin.profilePic = user.photoURL
+        appLogin.email = user.email
+    } else {
+        dispSignoutBtn.loggedOut = false
     }
 });
 
@@ -32,11 +34,11 @@ firebase.auth().onAuthStateChanged(function (user) {
 const login = () => {
     if (globalUser) {
         // User is signed in
-        console.log("User is signed in");
-        return globalUser;
+        console.log("User is signed in")
+        return globalUser
     } else {
-        let provider = new firebase.auth.GithubAuthProvider();
-        firebase.auth().signInWithRedirect(provider);
+        let provider = new firebase.auth.GithubAuthProvider()
+        firebase.auth().signInWithRedirect(provider)
     }
 };
 
@@ -58,4 +60,19 @@ const dispSigninBtn = new Vue(
             loggedIn: false
         }
     }
-);
+)
+
+const logout = () => {
+    if (globalUser) {
+        firebase.auth().signOut().then(() => location.reload())
+    }
+}
+
+const dispSignoutBtn = new Vue(
+    {
+        el: "#logout-btn",
+        data: {
+            loggedOut: true,
+        }
+    }
+)

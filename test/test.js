@@ -5,8 +5,6 @@ var path = require('path');
 // var upload = require(path.resolve(__dirname,"../public/scripts/upload.js"));
 // var excelFiles = require( path.resolve( __dirname, "./excelFiles.js" ));
 
-var importTest = require(path.resolve(__dirname, "../public/scripts/importTest.js"))
-
 let buses_headers = ["Bus Capacity", "Bus ID", "Bus Longitude", "Bus Latitude", "Bus Type", "Bus Yard", "Bus Yard Address"];
 let stops_headers = ["Student Longitude", "Student Latitude", "Pickup Type", "Maximum Walk Distance", "School Longitude", "School Latitude", "Bus ID", "Stop Longitude", "Stop Latitude"]
 let routes_headers = ["Bus ID", "Waypoint Longitude", "Waypoint Latitude"]
@@ -18,12 +16,6 @@ describe('Basic test', function() {
     assert.equal(-1, [1,2,3].indexOf(4));
   });
 });
-
-describe('Import Test', function() {
-  it('Runs an imported function', function() {
-    assert.equal("world", importTest.hello())
-  })
-})
 
 //
 // describe('Testing that valid excel files pass', function() {

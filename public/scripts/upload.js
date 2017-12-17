@@ -132,6 +132,10 @@ if (typeof window !== 'undefined') {
                         sum += parseFloat(distance)
                     }
                     var avg = sum / numBuses
+                    window.score = {
+                        avg: avg,
+                        max: max,
+                    }
                     var resultText = document.getElementById("result-text")
                     resultText.innerText = "Average Distance Traveled: " + avg.toFixed(2) + "m\nMax Distance Traveled: " + max.toFixed(2) + "m"
                     var flows = document.getElementById("flows")

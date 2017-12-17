@@ -7,7 +7,7 @@ function uploadToDB(file) {
             var storageRef = firebase.storage().ref();
             var solutionRef = storageRef.child(`solutions/${globalUser.uid}/${file.name}`);
             solutionRef.put(file).then(function(snapshot) {
-                resolve(`uploaded ${file.name}`)
+                resolve(`solutions/${globalUser.uid}/${file.name}`)
             }).catch(function(err) {
                 reject(err)
             })

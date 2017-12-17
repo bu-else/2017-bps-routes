@@ -28,6 +28,8 @@ block content
         .frame.upload
             h4 Submit a Solution to the BPS Challenge
             h6 **Once you select your file, the website will likely freeze for about a minute
+            p(style={margin: 0}) Simply uploading your solution will not put your solution on the ranking.
+            p(style={margin: 0}) In order to submit your solution to the ranking, save the solution in the next page.
             .file-drop-container
                 #drop
                     p Drop your solution here
@@ -37,4 +39,4 @@ block content
         .frame.result
             p#result-text Loading your result...
             #mapid(style={height: "300px", width: "60%"})
-            button#save Save your solution
+            button#save Save your solution and be on the ranking
